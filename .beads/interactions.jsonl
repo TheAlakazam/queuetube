@@ -1,0 +1,2 @@
+{"id":"int-90b00a28a06a84107255a5a524b41418","kind":"field_change","created_at":"2026-08-04T18:37:20.638171Z","actor":"Piyush Jaipuriyar","issue_id":"queuetube-r1d","extra":{"field":"status","new_value":"in_progress","old_value":"open"}}
+{"id":"int-870828a039dc496adbab4ba3695219db","kind":"field_change","created_at":"2026-08-04T18:42:14.306577Z","actor":"Piyush Jaipuriyar","issue_id":"queuetube-r1d","extra":{"field":"status","new_value":"closed","old_value":"in_progress","reason":"Closed"}}
