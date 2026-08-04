@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "queuetube",
+  "project_id": "9397fcda-facc-4c53-b2dd-5f5c2686a622"
+}
