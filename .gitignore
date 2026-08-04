@@ -4,3 +4,19 @@
 *.db
 .beads-credential-key
 .beads/proxieddb/
+
+# WXT / Node
+node_modules
+.output
+.wxt
+stats.html
+stats-*.json
+web-ext.config.ts
+logs
+*.log
+
+# Editor / OS
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
