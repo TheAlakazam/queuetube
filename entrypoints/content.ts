@@ -1,6 +1,7 @@
 import { classifyVideoLink } from '../utils/video-links';
 import { addToQueue, getKnownPlaylistId } from '../utils/queue-api';
 import { addToQueueViaMenu } from '../utils/queue-menu';
+import { addBackupEntry, watchForQueueConsumption } from '../utils/backup-mirror';
 
 // Surfaces known to carry a video's "More actions"/"Action menu" button as
 // a descendant. Not exhaustively verified on every surface (sidebar,
@@ -28,6 +29,16 @@ function findVideoContainer(anchor: HTMLAnchorElement): Element | null {
   return anchor.closest(VIDEO_CONTAINER_SELECTOR);
 }
 
+function extractTitle(anchor: HTMLAnchorElement, container: Element | null): string {
+  const ariaLabel = anchor.getAttribute('aria-label');
+  if (ariaLabel) {
+    return ariaLabel;
+  }
+  const titleEl = container?.querySelector('#video-title, h3');
+  const text = titleEl?.textContent?.trim();
+  return text || anchor.href;
+}
+
 function showToast(message: string): void {
   const toast = document.createElement('div');
   toast.textContent = message;
@@ -48,7 +59,12 @@ function showToast(message: string): void {
   setTimeout(() => toast.remove(), 1500);
 }
 
-async function handleVideoLink(videoId: string, watchUrl: string, container: Element | null): Promise<void> {
+async function handleVideoLink(
+  videoId: string,
+  watchUrl: string,
+  title: string,
+  container: Element | null
+): Promise<void> {
   if (!isQueueActive()) {
     window.location.href = watchUrl;
     return;
@@ -57,6 +73,7 @@ async function handleVideoLink(videoId: string, watchUrl: string, container: Ele
   if (getKnownPlaylistId()) {
     try {
       await addToQueue(videoId);
+      await addBackupEntry(videoId, title);
       showToast('Queued');
       return;
     } catch {
@@ -65,6 +82,7 @@ async function handleVideoLink(videoId: string, watchUrl: string, container: Ele
   }
 
   if (container && (await addToQueueViaMenu(container))) {
+    await addBackupEntry(videoId, title);
     showToast('Queued');
     return;
   }
@@ -92,7 +110,8 @@ function onPointerEvent(event: MouseEvent): void {
   event.preventDefault();
   event.stopImmediatePropagation();
 
-  void handleVideoLink(classification.videoId, anchor.href, findVideoContainer(anchor));
+  const container = findVideoContainer(anchor);
+  void handleVideoLink(classification.videoId, anchor.href, extractTitle(anchor, container), container);
 }
 
 export default defineContentScript({
@@ -100,5 +119,6 @@ export default defineContentScript({
   main() {
     document.addEventListener('click', onPointerEvent, true);
     document.addEventListener('auxclick', onPointerEvent, true);
+    watchForQueueConsumption();
   },
 });

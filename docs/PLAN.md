@@ -98,7 +98,7 @@ Captured "Add to queue" via network layer (not JS-object introspection) in a rea
 5. ✅ `utils/queue-menu.ts` — menu-simulation (fallback path, used only when we have no known `playlistId` for an already-active queue). Live-verified on both home-grid and search-results DOM. (queuetube-tz0)
 6. ✅ Link classification util + tests (vitest) for URL parsing (watch, shorts, list, edge cases). (queuetube-u9e)
 7. ✅ Click interception wiring (cmd-click + middle-click) → queue-api primary / queue-menu fallback / navigate-tab for empty queue; toast feedback. `isQueueActive()` uses `#movie_player`'s `unstarted-mode` CSS class (live-verified: absent even when merely paused/continue-watching, present only pre-playback) as the "anything active" signal. Not yet exercised end-to-end through a loaded extension — see queuetube-wmz. (queuetube-i4h)
-8. Backup mirror in storage + consumption cleanup.
+8. ✅ Backup mirror in storage + consumption cleanup. `utils/backup-mirror.ts`: dedupe-on-requeue, cap 100, best-effort removal on `yt-navigate-finish`. Unit-tested with `wxt/testing/fake-browser` (added `vitest.config.ts` + `WxtVitest()` plugin for auto-imports/`fakeBrowser` in tests). Wired into `content.ts`: entry added after a successful queue-api/queue-menu add (not on the navigate-immediately path, since that's not actually queued). Real `chrome.storage` behavior not verifiable outside a loaded extension — deferred to queuetube-wmz like i4h. (queuetube-i2w)
 9. Popup with Restore/Clear.
 
 ## Verification
