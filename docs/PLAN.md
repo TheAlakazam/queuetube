@@ -96,7 +96,7 @@ Captured "Add to queue" via network layer (not JS-object introspection) in a rea
 3. ✅ **Spike 2:** captured + decoded the real `playlist/create` / `browse/edit_playlist` network payloads; direct fetch-replay promoted to primary. (queuetube-6k5)
 4. ✅ `utils/queue-api.ts` — direct fetch-replay implementation (primary path): build `context` via MAIN-world `ytcfg` read (through a new `entrypoints/background.ts` service worker), call `playlist/create` or `browse/edit_playlist` as appropriate, track returned `playlistId` in module state for reuse. Plain JSON confirmed sufficient (no gzip). (queuetube-cyi)
 5. `utils/queue-menu.ts` — menu-simulation (fallback path, used only when we have no known `playlistId` for an already-active queue).
-6. Link classification util + tests (vitest) for URL parsing (watch, shorts, list, edge cases).
+6. ✅ Link classification util + tests (vitest) for URL parsing (watch, shorts, list, edge cases). (queuetube-u9e)
 7. Click interception wiring (cmd-click + middle-click) → queue-api primary / queue-menu fallback / navigate-tab for empty queue; toast feedback.
 8. Backup mirror in storage + consumption cleanup.
 9. Popup with Restore/Clear.
