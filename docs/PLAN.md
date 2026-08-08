@@ -51,7 +51,7 @@ Note: the originally planned `injected.ts` (MAIN-world page-context script) is d
   3. Match the "Add to queue" item **by its icon's SVG `<path d>` fingerprint, not by text** (locale-safe): `M2 2.864v6.277a.5.5 0 00.748.434L9 6.002 2.748 2.43A.5.5 0 002 2.864ZM21 5h-9a1 1 0 100 2h9a1 1 0 100-2Zm0 6H9a1 1 0 000 2h12a1 1 0 000-2Zm0 6H9a1 1 0 000 2h12a1 1 0 000-2Z` (verified against 7 sibling items, no collisions).
   4. Click the matched item; verified in the queue panel that the video lands below whatever was already playing.
   5. Known UX cost: briefly opens/closes YouTube's own popup menu, visibly.
-- **Not yet verified (defer):** whether the same selectors hold on other surfaces (sidebar, channel pages, Shorts shelf) — some may still use legacy `ytd-video-renderer` DOM. Verify per-surface during implementation.
+- **Verified (queuetube-tz0, 2026-08-08):** implemented `utils/queue-menu.ts` and live-tested end-to-end on both surfaces — home grid (`yt-lockup-view-model`, `button[aria-label="More actions"]`) and search results (`ytd-video-renderer`, `button[aria-label="Action menu"]`) — both located the menu button, opened it, matched "Add to queue" by icon fingerprint, and clicked it successfully. Sidebar/channel/Shorts shelf surfaces not separately spot-checked but use the same two underlying DOM families, so covered by the same selectors.
 
 **Spike 2 (queuetube-6k5, 2026-08-05): the click has a real, replayable network payload — direct fetch-replay promoted to primary, menu-sim demoted to conditional fallback.**
 
@@ -95,7 +95,7 @@ Captured "Add to queue" via network layer (not JS-object introspection) in a rea
 2. ✅ **Spike:** validated menu-simulation approach for Add-to-Queue on youtube.com home grid; see findings above. (queuetube-ets)
 3. ✅ **Spike 2:** captured + decoded the real `playlist/create` / `browse/edit_playlist` network payloads; direct fetch-replay promoted to primary. (queuetube-6k5)
 4. ✅ `utils/queue-api.ts` — direct fetch-replay implementation (primary path): build `context` via MAIN-world `ytcfg` read (through a new `entrypoints/background.ts` service worker), call `playlist/create` or `browse/edit_playlist` as appropriate, track returned `playlistId` in module state for reuse. Plain JSON confirmed sufficient (no gzip). (queuetube-cyi)
-5. `utils/queue-menu.ts` — menu-simulation (fallback path, used only when we have no known `playlistId` for an already-active queue).
+5. ✅ `utils/queue-menu.ts` — menu-simulation (fallback path, used only when we have no known `playlistId` for an already-active queue). Live-verified on both home-grid and search-results DOM. (queuetube-tz0)
 6. ✅ Link classification util + tests (vitest) for URL parsing (watch, shorts, list, edge cases). (queuetube-u9e)
 7. Click interception wiring (cmd-click + middle-click) → queue-api primary / queue-menu fallback / navigate-tab for empty queue; toast feedback.
 8. Backup mirror in storage + consumption cleanup.
