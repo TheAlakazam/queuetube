@@ -97,7 +97,7 @@ Captured "Add to queue" via network layer (not JS-object introspection) in a rea
 4. ✅ `utils/queue-api.ts` — direct fetch-replay implementation (primary path): build `context` via MAIN-world `ytcfg` read (through a new `entrypoints/background.ts` service worker), call `playlist/create` or `browse/edit_playlist` as appropriate, track returned `playlistId` in module state for reuse. Plain JSON confirmed sufficient (no gzip). (queuetube-cyi)
 5. ✅ `utils/queue-menu.ts` — menu-simulation (fallback path, used only when we have no known `playlistId` for an already-active queue). Live-verified on both home-grid and search-results DOM. (queuetube-tz0)
 6. ✅ Link classification util + tests (vitest) for URL parsing (watch, shorts, list, edge cases). (queuetube-u9e)
-7. Click interception wiring (cmd-click + middle-click) → queue-api primary / queue-menu fallback / navigate-tab for empty queue; toast feedback.
+7. ✅ Click interception wiring (cmd-click + middle-click) → queue-api primary / queue-menu fallback / navigate-tab for empty queue; toast feedback. `isQueueActive()` uses `#movie_player`'s `unstarted-mode` CSS class (live-verified: absent even when merely paused/continue-watching, present only pre-playback) as the "anything active" signal. Not yet exercised end-to-end through a loaded extension — see queuetube-wmz. (queuetube-i4h)
 8. Backup mirror in storage + consumption cleanup.
 9. Popup with Restore/Clear.
 
