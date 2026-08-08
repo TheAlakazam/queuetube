@@ -111,5 +111,11 @@ Captured "Add to queue" via network layer (not JS-object introspection) in a rea
   - Kill tab, reopen YouTube, popup → Restore repopulates native queue.
 - Chrome browser automation (claude-in-chrome) can drive the manual checks where practical.
 
+## CI / Release (queuetube-l1r, queuetube-b33, 2026-08-08)
+- `.github/workflows/ci.yml` — on push/PR to `main`: install, `tsc --noEmit`, `vitest run`, `wxt build`. Quality gate.
+- `.github/workflows/release.yml` — on `v*` tag push: same gate, then `wxt zip` (chrome-only, per phase 1 scope) and attach the zip to a GitHub Release via `softprops/action-gh-release`.
+- `package.json` pins `packageManager: pnpm@10.18.0` so `pnpm/action-setup` in CI matches the local version exactly.
+- Verified locally: `pnpm run compile`, `pnpm test`, `pnpm run build`, `pnpm run zip` all pass, producing `.output/queuetube-0.0.0-chrome.zip`. Workflow YAML not run through `act`; only the underlying script steps were exercised locally, as agreed with the user.
+
 ## Later phases (not this plan)
 Firefox port (WXT handles manifest), Safari port via Xcode converter (click-time interception already the design, so no rework), settings/shortcuts/sync.
